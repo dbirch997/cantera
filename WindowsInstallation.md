@@ -1,0 +1,54 @@
+These installation instructions are for Cantera 2.1.1.
+
+# Installing Cantera 2.1 for Windows #
+
+  1. **Choose your Python version and architecture**
+    * On Windows, Cantera supports Python 2.7 and Python 3.3. Python 3.3 is recommended unless you need to use legacy code that does not work with Python 3.
+    * Cantera supports both 32- and 64- bit Python installations.
+    * You need choose the matching Cantera installer for your Python version and machine architecture.
+    * The rest of these instructions will refer to your chosen version of Python as **X.Y**.
+    * If you are using Matlab, you must use the same architecture for Cantera and Matlab. Matlab defaults to 64-bit if you are running a 64-bit operating system.
+  1. **Install Python**
+    * Go to [python.org](http://python.org/download/).
+    * **64-bit**: Download the most recent "Python X.Y Windows X86-64 MSI Installer"
+    * **32-bit**: Download the most recent "Python X.Y Windows x86 MSI Installer"
+    * Run the installer. The default installation options should be fine.
+    * Python is required in order to work with `.cti` input files even if you are not using the Python interface to Cantera.
+  1. **Install Numpy**
+    * Go to the [Unofficial Windows Binaries for Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/) page.
+    * Download the most recent release of the 1.x series for Python X.Y that matches your Python architecture. The binaries for Cantera 2.1.1 require Numpy 1.8.0 or newer.
+    * Run the installer.
+  1. **Remove old versions of Cantera**
+    * Use The Windows "Add/Remove Programs" interface
+    * Remove both the main Cantera package and the Python module.
+    * The Python module will be listed as "Python X.Y Cantera ..."
+  1. **Install Cantera**
+    * Go to the [Cantera Downloads](https://sourceforge.net/projects/cantera/files/cantera/2.1.1/) page.
+    * **64-bit**: Download **`Cantera-2.1.1-x64.msi`** and **`Cantera-Python-2.1.1-x64-pyX.Y.msi`**.
+    * **32-bit**: Download **`Cantera-2.1.1-x86.msi`** and **`Cantera-Python-2.1.1-x86-pyX.Y.msi`**.
+    * If you are only using the Python module, you do not need to download and install the base package.
+    * Run the installer(s).
+  1. **Configure Matlab** (optional)
+    * Set the environment variable `PYTHON_CMD`
+      * Right-click _My Computer_, select _Properties_
+      * Go to the _Advanced_ tab.
+      * Select _Environment Variables_.
+      * Add a _New_ variable with `PYTHON_CMD` as the _name_ and the full path to the Python executable (e.g. `c:\python27\python.exe`) as the _value_.
+      * Setting `PYTHON_CMD` is not necessary if the path to `python.exe` is in your `PATH` (which can be set from the same configuration dialog).
+    * Launch Matlab
+    * Go to _File->Set Path..._
+    * Select _Add with Subfolders_
+    * Browse to the folder `c:\Program Files\Cantera\matlab\toolbox`
+    * Select _Save_, then _Close_.
+  * **Test the installation**
+    * Python:
+```
+import cantera
+gas = cantera.Solution('gri30.cti')
+h2o = cantera.PureFluid('liquidvapor.cti', 'water')
+```
+    * Matlab:
+```
+gas = IdealGasMix('gri30.cti')
+h2o = importPhase('liquidvapor.cti','water')
+```

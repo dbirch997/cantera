@@ -1,0 +1,84 @@
+# Introduction #
+
+
+Anonymous, read-only source checkout:
+
+> svn  checkout  http://cantera.googlecode.com/svn/cantera/trunk  cantera-read-only
+
+Developers, please keep reading!
+
+How to use subversion to access code at Google.
+
+  * Google-code info
+  * Subversion
+
+To enable subversion commands through a firewall:
+
+If your computer is behind a firewall that supports a proxy server for http traffic on port 80, you will have to edit your .subversion/servers file to get svn communications through the firewall. For example these entries are currently needed at Sandia:
+
+```
+[groups]
+  googlec = *.googlecode.com
+
+[googlec]
+   http-proxy-host = wwwproxy.sandia.gov 
+   http-proxy-port = 80
+   http-timeout = 60
+   neon-debug-mask = 0
+```
+
+More information about svn and proxy servers is included within the .subversions subdirectory.
+
+Details
+
+To enable keyword substitution when you check files in/out (i.e., to expand $Id$ into the version information) edit .subversion/config in your home directory (made by subversion when it first runs) and uncomment the line
+
+> enable-auto-props = yes
+
+and put these lines into the auto-props section that should be immediately following the line that you just changed.
+
+> `*`.c = svn:eol-style=native;svn:keywords=Id
+
+> `*`.cpp = svn:eol-style=native;svn:keywords=Id
+
+> `*`.h = svn:eol-style=native;svn:keywords=Id
+
+
+If you don't have the above settings then when you add a new file it will not have the keywords property set which will show up as the $Id$ not being expanded into version information. To fix this, there is a special target in the top level Makefile that will go through the tree and attach the property to all source files (that don't have it set). We only want this to happen for source (and perhaps select other) files since the automatic expansion is dangerous.
+
+To checkout cantera
+
+> svn checkout https://cantera.googlecode.com/svn/cantera/trunk/ --username USERNAME
+
+where you will replace USERNAME with your username. The first time, you will be prompted for your personal googlecode.com password which you can find by going to your profile at http://code.google.com/u/USERNAME and clicking on the settings tab.
+
+Recommended coding practices and style for Cantera are listed in
+[CanteraDevelopmentPractices](https://drive.google.com/folderview?id=0Bz0KUVyMyQtcMjBlMDM0N2UtZmUxZS00ZTJkLThkY2MtNTU1MzI2YTBhMzRh&usp=sharing).
+
+To check in your changes
+
+> svn commit -m "INFORMATIVE MESSAGE"
+
+To determine what modifications you have made relative to the version you checked out (does not access the repository):
+
+> svn status
+
+To update your source with changes from the repository
+
+> svn update
+
+Files marked with C have conflicts that must be resolved by hand. In the case of a conflict, subversion will annotate the file with context differences indicating the text that it could not merge. It also creates filename.mine, filename.xxx and filename.rrr where xxx indicates the old version number that you modified, and rrr indicates the current version number that you just tried to update to. It is often easiest and safest to copy the current version into filename and then merge your changes into it. Once you are happy with the merged version, you must resolve the conflict with::
+
+> svn resolved filename
+
+To schedule a file(s) for addition to the repository::
+
+> svn add filename
+
+To schedule a file(s) for deletion from the repository::
+
+> svn del filename
+
+To un-schedule changes and revert to the repository state::
+
+> svn revert filename
